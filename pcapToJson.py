@@ -1,17 +1,23 @@
 import os
 import argparse
 
+def convertJson(pcapChunk):
+    convertCmd = "sudo tshark -r ./splitPcap/" + pcapChunk + " -T json >./splitJson/" + pcapChunk +".json"
+    os.system(convertCmd)
+
 def main(originalPcap, outputJson):
     # split pcap ( if pcap size is too large )
-    spiltCmd = "tcpdump -r " + originalPcap + "-w tmp -C 20"
-    # tcpdump -r 1G.pcap -w output_packet_capture -C 500
+    spiltCmd = "tcpdump -r " + originalPcap + " -w ./splitPcap/tmp -C 100"
     os.system(spiltCmd)
+    print("[+] Success to split pcap")
 
-    # convert pcap to json
-    
-    for splitPcap in 
-    convertCmd = "sudo tshark -r " + originalPcap + " -T json >" + outputJson
-    os.system(convertCmd)
+    path = "./splitPcap/"
+    fileList = os.listdir(path)
+    p = Pool()
+    p.map(convertJson, fileList)
+
+    #os.system("sudo tshark -r ./originalPcap/1G.pcap -T ek >./1G.json")
+    os.system("rm ./splitPcap/*")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Pcap to Json')
